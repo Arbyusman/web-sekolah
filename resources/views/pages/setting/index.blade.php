@@ -2,15 +2,12 @@
     <x-alert-toast />
     <x-alert-modal />
     <x-card>
-        <x-slot name="body">
-            <x-form :action="route('settings.update', ['setting' => $setting])" method="POST">
+        <x-slot:body>
+            <x-form :action="route('settings.update', ['setting' => $setting])" method="POST" :isModal="false">
                 @csrf
                 @method('PUT')
-                <x-slot name="header">
-                    Settings
-                </x-slot>
-                <x-slot name="title">
-                    Settings
+                <x-slot:title>
+                    {{ $title }}
                 </x-slot>
 
                 <x-input type="text" name="phone" label="Phone" :value="$setting->phone" required />

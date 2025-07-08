@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MajorController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,4 +33,9 @@ Route::middleware(['auth', 'verified'])
             ->name('settings.')->group(function () {
                 Route::resource('', SettingController::class)->parameter('', 'setting')->only(['index', 'update']);
             });
+
+        Route::controller(MajorController::class)->group(function () {
+            Route::get('majors/table', 'table')->name('majors.table');
+            Route::resource('majors', MajorController::class);
+        });
     });

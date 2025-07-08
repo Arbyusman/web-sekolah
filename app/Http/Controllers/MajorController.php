@@ -2,64 +2,70 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MajorRequest;
 use App\Models\Major;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class MajorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $title = 'Jurusan';
+
     public function index()
     {
-        //
+        $title = $this->title;
+
+        return view('pages.major.index', compact('title'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function table()
     {
-        //
+        return DataTables::of(Major::query())
+            ->addIndexColumn()
+            ->addColumn('action', fn ($data) => $data->id)
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(MajorRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+            Major::create($data);
+            DB::commit();
+
+            return redirect()->back()->with(['success' => true, 'message' => 'Data Jurusan berhasil disimpan.']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => false, 'message' => 'Data Jurusan gagal disimpan: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Major $major)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Major $major)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Major $major)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+            $major->update($data);
+            DB::commit();
+
+            return redirect()->back()->with(['success' => true, 'message' => 'Data Jurusan berhasil diperbarui.']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => false, 'message' => 'Data Jurusan gagal diperbarui: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Major $major)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $major->delete();
+            DB::commit();
+
+            return redirect()->back()->with(['success' => true, 'message' => 'Data berhasil dihapus.']);
+        } catch (\Exception $e) {
+            return redirect()->back()->with(['error' => false, 'message' => 'Data Jurusan gagal diperbarui: ' . $e->getMessage()], 500);
+        }
     }
 }
