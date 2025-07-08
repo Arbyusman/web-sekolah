@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SettingRequest;
 use App\Models\Setting;
-use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
@@ -17,8 +17,16 @@ class SettingController extends Controller
         return view('pages.setting.index', compact('setting', 'title'));
     }
 
-    public function update(Request $request, Setting $setting)
+    public function update(SettingRequest $request, Setting $setting)
     {
-        //
+        try {
+
+            $validated = $request->validated();
+            $setting->update($validated);
+
+            return redirect()->back()->with('success', 'Konten Website berhasil diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Konten Website gagal diperbarui: ' . $e->getMessage());
+        }
     }
 }

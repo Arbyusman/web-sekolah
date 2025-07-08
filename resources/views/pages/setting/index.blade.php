@@ -1,19 +1,36 @@
 <x-default-layout>
+    <x-alert-toast />
+    <x-alert-modal />
+    <x-card>
+        <x-slot name="body">
+            <x-form :action="route('settings.update', ['setting' => $setting])" method="POST">
+                @csrf
+                @method('PUT')
+                <x-slot name="header">
+                    Settings
+                </x-slot>
+                <x-slot name="title">
+                    Settings
+                </x-slot>
 
-    <main class="card p-4">
+                <x-input type="text" name="phone" label="Phone" :value="$setting->phone" required />
+                <x-input type="email" name="email" label="Email" :value="$setting->email" required />
 
-        <x-title :title="$title" />
-        <x-form :action="route('settings.update', ['setting' => $setting])" method="POST">
-            <x-input class="col-12" type="text" name="Phone" label="phone" value="{{ $setting->phone }}"
-                required="true" />
-            <x-input class="col-12" type="email" name="Email" label="email" value="{{ $setting->email }}"
-                required="true" />
+                <x-textarea label="Address" name="address" class="col-12 my-2" :value="$setting->address" />
 
-            <textarea class="form-control col-12" name="Address" id="Address" rows="3" placeholder="Address">{{ $setting->address }}</textarea>
-            <textarea class="form-control col-12" name="maps" id="maps" rows="3" placeholder="Maps">{{ $setting->maps }}</textarea>
+                <x-textarea label="Maps" name="maps" class="col-12 my-2" :value="$setting->maps" />
 
-            <button type="submit" class="btn btn-primary mt-3"> @include('partials/general/_button-indicator', ['label' => 'Update'])
-        </x-form>
-    </main>
+                @if (!empty($setting->maps))
+                    <div class="mt-4">
+                        <label class="form-label fw-semibold">Map Preview</label>
+                        <div class="ratio ratio-16x9">
+                            {!! $setting->maps !!}
+                        </div>
+                    </div>
+                @endif
+
+            </x-form>
+        </x-slot>
+    </x-card>
 
 </x-default-layout>
