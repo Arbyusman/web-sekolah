@@ -8,28 +8,27 @@
 ])
 
 <form action="{{ $action }}" method="{{ strtoupper($method) }}" {{ $enctype ? 'enctype=' . $enctype : '' }}
-    {{ $attributes }}
-    onsubmit="
-        const btn = this.querySelector('button[type=submit]');
-        btn.disabled = true;
-        btn.innerHTML = `<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Loading...`;
-    ">
+    {{ $attributes }}>
     @if (!$isModal)
         <div class="mt-4 d-flex justify-content-between gap-2">
             @if ($title)
                 <div class="mb-4 border-bottom pb-2">
-                    @if ($title)
-                        <div class="card-title m-0">
-                            {!! $title ?? '' !!}
-                        </div>
-                    @endif
-
+                    <div class="card-title m-0">
+                        {!! $title !!}
+                    </div>
                 </div>
             @endif
+
             <div class="mb-4 border-bottom pb-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>
-                    @include('partials/general/_button-indicator', ['label' => $buttonLabel])
+                <button type="submit" class="btn btn-primary indicator">
+                    <span class="indicator-label">
+                        <i class="fas fa-save me-1"></i>
+                        {{ $buttonLabel }}
+                    </span>
+                    <span class="indicator-progress">
+                        <span class="spinner-border spinner-border-sm align-middle me-2"></span>
+                        Mohon tunggu...
+                    </span>
                 </button>
 
                 <button type="reset" class="btn btn-light border">
@@ -42,3 +41,26 @@
 
     {{ $slot }}
 </form>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const forms = document.querySelectorAll('form');
+
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const btn = this.querySelector('button[type="submit"]');
+                    if (btn) {
+                        btn.setAttribute('data-kt-indicator', 'on');
+                        btn.disabled = true;
+
+                        setTimeout(() => {
+                            btn.removeAttribute('data-kt-indicator');
+                            btn.disabled = false;
+                        }, 3000);
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

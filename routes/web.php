@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\ActivityCategoryController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\SettingController;
+use App\Models\ActivityCategory;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +38,16 @@ Route::middleware(['auth', 'verified'])
 
         Route::controller(MajorController::class)->group(function () {
             Route::get('majors/table', 'table')->name('majors.table');
-            Route::resource('majors', MajorController::class);
+            Route::resource('majors', MajorController::class)->except(['create', 'edit']);
         });
+
+        Route::prefix('activity')
+            ->name('activity.')
+            ->group(function () {
+                Route::controller(ActivityCategoryController::class)
+                    ->group(function () {
+                        Route::get('categories/table', 'table')->name('categories.table');
+                        Route::resource('categories', ActivityCategoryController::class)->except(['create', 'edit'])->parameters(['categories' => 'activityCategory']);
+                    });
+            });
     });

@@ -2,64 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ActivityCategoryRequest;
 use App\Models\ActivityCategory;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
+
 
 class ActivityCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected $title = 'Kategori Kegiatan';
+
     public function index()
     {
-        //
+        $title = $this->title;
+
+        return view('pages.activity.category.index', compact('title'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function table()
     {
-        //
+        return DataTables::of(ActivityCategory::query())
+            ->addIndexColumn()
+            ->addColumn('action', fn($data) => $data->id)
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ActivityCategoryRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+            ActivityCategory::create($data);
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Data Kategori Kegiatan berhasil disimpan.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Data Kategori Kegiatan gagal disimpan: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(ActivityCategory $activityCategory)
     {
-        //
+        return response()->json($activityCategory);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ActivityCategory $activityCategory)
+    public function update(ActivityCategoryRequest $request, ActivityCategory $activityCategory)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+            $activityCategory->update($data);
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Data Kategori Kegiatan berhasil diperbarui.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Data Kategori Kegiatan gagal diperbarui: ' . $e->getMessage()], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ActivityCategory $activityCategory)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(ActivityCategory $activityCategory)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $activityCategory->delete();
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Data Kategori Kegiatan berhasil dihapus.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Data Kategori Kegiatan gagal dihapus: ' . $e->getMessage()], 500);
+        }
     }
 }

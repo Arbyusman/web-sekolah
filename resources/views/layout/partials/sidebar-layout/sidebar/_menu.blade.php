@@ -29,7 +29,7 @@
             </div>
             <!--end:Menu item-->
             <!--begin:Menu item-->
-            <div  class="menu-item menu-accordion">
+            <div class="menu-item menu-accordion">
                 <!--begin:Menu link-->
                 <span class="menu-link">
                     <span class="menu-icon">{!! getIcon('address-book', 'fs-2') !!}</span>
@@ -127,7 +127,7 @@
             </div>
             <!--end:Menu item-->
             <!--begin:Menu item-->
-            <a  href="{{ route('majors.index') }}"
+            <a href="{{ route('majors.index') }}"
                 class="menu-item {{ request()->routeIs('majors.index') ? 'active' : '' }}">
                 <!--begin:Menu link-->
                 <span class="menu-link">
@@ -137,6 +137,47 @@
                 <!--end:Menu link-->
             </a>
             <!--end:Menu item-->
+
+
+            <div data-kt-menu-trigger="click"
+                class="menu-item menu-accordion {{ request()->routeIs('activity.categories.index') ? 'here show' : '' }}">
+                <!--begin:Menu link-->
+                <span class="menu-link">
+                    <span class="menu-icon">{!! getIcon('questionnaire-tablet', 'fs-2') !!}</span>
+                    <span class="menu-title">Kegiatan</span>
+                    <span class="menu-arrow"></span>
+                </span>
+                <!--end:Menu link-->
+
+                <!--begin:Menu sub-->
+                <div class="menu-sub menu-sub-accordion">
+                    <!--begin:Menu item-->
+                    <div class="menu-item">
+                        <a href="{{ route('activity.categories.index') }}"
+                            class="menu-link {{ request()->routeIs('activity.categories.index') ? 'active' : '' }}">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Kategori</span>
+                        </a>
+                    </div>
+                    <!--end:Menu item-->
+
+                    <!--begin:Menu item-->
+                    <div class="menu-item">
+                        <a class="menu-link" href="/">
+                            <span class="menu-bullet">
+                                <span class="bullet bullet-dot"></span>
+                            </span>
+                            <span class="menu-title">Kegiatan</span>
+                        </a>
+                    </div>
+                    <!--end:Menu item-->
+                </div>
+                <!--end:Menu sub-->
+            </div>
+
+
 
             <!--begin:Menu item-->
             <div class="menu-item pt-5">
@@ -148,7 +189,7 @@
             </div>
             <!--end:Menu item-->
             <!--begin:Menu item-->
-            <a  href="{{ route('settings.index') }}"
+            <a href="{{ route('settings.index') }}"
                 class="menu-item {{ request()->routeIs('settings.index') ? 'active' : '' }}">
                 <span class="menu-link">
                     <span class="menu-icon">{!! getIcon('gear', 'fs-2') !!}</span>
