@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MajorController;
 use App\Http\Controllers\SettingController;
-use App\Models\ActivityCategory;
 use Illuminate\Support\Facades\Route;
 
 /*

@@ -7,7 +7,6 @@ use App\Models\ActivityCategory;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
-
 class ActivityCategoryController extends Controller
 {
     protected $title = 'Kategori Kegiatan';
@@ -23,7 +22,7 @@ class ActivityCategoryController extends Controller
     {
         return DataTables::of(ActivityCategory::query())
             ->addIndexColumn()
-            ->addColumn('action', fn($data) => $data->id)
+            ->addColumn('action', fn ($data) => $data->id)
             ->rawColumns(['action'])
             ->make(true);
     }

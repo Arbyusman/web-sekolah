@@ -12,10 +12,10 @@
                 </x-button>
 
                 <x-modal id="kt_modal_add_major" title="Tambah Jurusan">
-                    <form id="add-major-form">
+                    <form id="kt_modal_add_major_form">
                         @csrf
-                        <div class="mb-5">
-                            <x-input type="text" name="name" id="name" label="Nama" required />
+                        <div class="fv-row mb-5">
+                            <x-input type="text" name="name" id="name" label="Nama" />
                         </div>
                         <div class="text-end mt-4">
                             <x-button type="button" color="light" dataBsDismiss="modal">Batal</x-button>
@@ -42,12 +42,12 @@
                 </x-slot:head>
             </x-table>
             <x-modal id="kt_modal_edit_major" title="Edit Jurusan">
-                <x-form action="" id="edit-major-form" method="POST">
+                <x-form action="" id="kt_modal_edit_major_form" method="POST">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="id" id="id">
-                    <div class="mb-5">
-                        <x-input type="text" name="name" id="name" label="Nama" required />
+                    <div class="fv-row mb-5">
+                        <x-input type="text" name="name" id="name" label="Nama" />
                     </div>
                     <div class="text-end mt-4">
                         <x-button type="button" color="light" dataBsDismiss="modal">Batal</x-button>
@@ -57,10 +57,10 @@
             </x-modal>
 
             <x-modal id="kt_modal_delete_major" title="Hapus Jurusan">
-                <x-form action="" id="delete-major-form" method="POST">
+                <x-form action="" id="kt_modal_delete_major_form" method="POST">
                     @csrf
                     @method('DELETE')
-                    <input type="hidden" name="id" id="delete-major-id">
+                    <input type="hidden" name="id" id="id">
                     <p>Apakah Anda yakin ingin menghapus jurusan ini?</p>
                     <div class="text-end mt-4">
                         <x-button type="button" color="light" dataBsDismiss="modal">Batal</x-button>

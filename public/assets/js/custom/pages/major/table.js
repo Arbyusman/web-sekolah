@@ -7,15 +7,13 @@ const KTMajor = (() => {
     const getTableElement = () => document.querySelector("#kt_majors_table");
     const getAjaxUrl = () => document.getElementById("table-url")?.value || '';
 
-    const renderActionButtons = (data) => `
-        <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1 edit-major-btn"
-            data-id="${data}">
+    const renderActionButtons = (id) => `
+        <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1 edit-major-btn" data-id="${id}">
             <i class="ki-duotone ki-pencil fs-2">
                 <span class="path1"></span><span class="path2"></span>
             </i>
         </button>
-        <button class="btn btn-icon btn-bg-danger btn-active-color-danger btn-sm me-1 delete-major-btn"
-            data-id="${data}">
+        <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm delete-major-btn" data-id="${id}">
             <i class="ki-duotone ki-trash fs-2">
                 <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span>
             </i>
@@ -23,6 +21,10 @@ const KTMajor = (() => {
     `;
 
     const initDataTable = () => {
+        if ($.fn.DataTable.isDataTable(table)) {
+            $(table).DataTable().clear().destroy();
+        }
+
         datatable = $(table).DataTable({
             searchDelay: 500,
             processing: true,
@@ -54,6 +56,7 @@ const KTMajor = (() => {
     };
 
     const deleteMajor = () => {
+        const button = deleteForm.find('button[type="submit"]');
         $(document).on('click', '.delete-major-btn', function () {
             const id = $(this).data('id');
             deleteForm.attr('action', `/majors/${id}`);
@@ -72,11 +75,13 @@ const KTMajor = (() => {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
+                    button.removeAttr('data-kt-indicator');
                     deleteModal.modal('hide');
+                    Swal.fire('Deleted!', response.message || 'Jurusan berhasil dihapus.', 'success');
                     window.datatable.ajax.reload();
-                    Swal.fire('Deleted!', 'Jurusan berhasil dihapus.', 'success');
                 },
                 error: function () {
+                    button.removeAttr('data-kt-indicator');
                     Swal.fire('Error!', 'Terjadi kesalahan saat menghapus.', 'error');
                 }
             });
@@ -87,9 +92,9 @@ const KTMajor = (() => {
         table = getTableElement();
         if (!table) return;
 
-        deleteForm = $('#delete-major-form');
-        deleteIdInput = $('#delete-major-id');
         deleteModal = $('#kt_modal_delete_major');
+        deleteForm = deleteModal.find('#kt_modal_delete_major_form');
+        deleteIdInput = deleteForm.find('#id');
 
         initDataTable();
         deleteMajor();

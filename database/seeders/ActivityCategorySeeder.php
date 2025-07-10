@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Activity;
 use App\Models\ActivityCategory;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ActivityCategorySeeder extends Seeder
