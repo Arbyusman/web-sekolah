@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MajorRequest;
 use App\Models\Major;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -36,13 +35,20 @@ class MajorController extends Controller
             Major::create($data);
             DB::commit();
 
-            return redirect()->back()->with(['success' => true, 'message' => 'Data Jurusan berhasil disimpan.']);
+            return response()->json(['success' => true, 'message' => 'Data Jurusan berhasil disimpan.']);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => false, 'message' => 'Data Jurusan gagal disimpan: ' . $e->getMessage()], 500);
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Data Jurusan gagal disimpan: ' . $e->getMessage()], 500);
         }
     }
 
-    public function update(Request $request, Major $major)
+    public function show(Major $major)
+    {
+        return response()->json($major);
+    }
+
+    public function update(MajorRequest $request, Major $major)
     {
         try {
             DB::beginTransaction();
@@ -50,9 +56,11 @@ class MajorController extends Controller
             $major->update($data);
             DB::commit();
 
-            return redirect()->back()->with(['success' => true, 'message' => 'Data Jurusan berhasil diperbarui.']);
+            return response()->json(['success' => true, 'message' => 'Data Jurusan berhasil diperbarui.']);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => false, 'message' => 'Data Jurusan gagal diperbarui: ' . $e->getMessage()], 500);
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Data Jurusan gagal diperbarui: ' . $e->getMessage()], 500);
         }
     }
 
@@ -63,9 +71,11 @@ class MajorController extends Controller
             $major->delete();
             DB::commit();
 
-            return redirect()->back()->with(['success' => true, 'message' => 'Data berhasil dihapus.']);
+            return response()->json(['success' => true, 'message' => 'Data Jurusan berhasil dihapus.']);
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => false, 'message' => 'Data Jurusan gagal diperbarui: ' . $e->getMessage()], 500);
+            DB::rollBack();
+
+            return response()->json(['success' => false, 'message' => 'Data Jurusan gagal dihapus: ' . $e->getMessage()], 500);
         }
     }
 }

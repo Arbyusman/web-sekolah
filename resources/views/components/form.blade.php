@@ -41,22 +41,4 @@
     @endif
 
     {{ $slot }}
-
-    @if ($isModal)
-        <div class="mt-4 d-flex justify-content-center gap-2">
-            <div class="mb-4 border-bottom pb-2">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>
-                    @include('partials/general/_button-indicator', ['label' => $buttonLabel])
-                </button>
-
-                <button type="reset" class="btn btn-light border">
-                    <i class="fas fa-undo me-1"></i>
-                    Reset
-                </button>
-            </div>
-        </div>
-    @endif
-
-
 </form>
