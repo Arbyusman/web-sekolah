@@ -2,64 +2,140 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ActivityRequest;
 use App\Models\Activity;
+use App\Models\ActivityImage;
+use App\Traits\site;
+use App\Traits\SiteTrait;
+use App\Traits\UploadFile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Yajra\DataTables\Facades\DataTables;
 
 class ActivityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use SiteTrait;
+
+    protected $title = 'Dokumentasi Kegiatan';
+    protected $imageFolder = 'activities';
+
     public function index()
     {
-        //
+        $title = $this->title;
+        return view('pages.activity.documentation.index', compact('title'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function table()
     {
-        //
+        return DataTables::of(Activity::query())
+            ->addIndexColumn()
+            ->addColumn('action', fn($data) => $data->id)
+            ->rawColumns(['action'])
+            ->make(true);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(ActivityRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+
+            $activity = Activity::create($data);
+
+            if ($request->hasFile('images')) {
+                $uploadedImages = $this->uploadMultipleFiles($request->file('images'), $this->imageFolder);
+
+                foreach ($uploadedImages as $imagePath) {
+                    $activity->acivityImages()->create([
+                        'image_path' => $imagePath,
+                        'image_url' => $this->getFileUrl($imagePath)
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Dokumentasi Kegiatan berhasil disimpan.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Dokumentasi Kegiatan gagal disimpan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Activity $activity)
     {
-        //
+        return response()->json($activity->load('acivityImages'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Activity $activity)
+    public function update(ActivityRequest $request, Activity $activity)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $data = $request->validated();
+
+            $activity->update($data);
+
+            if ($request->hasFile('images')) {
+                $this->deleteMultipleFiles(
+                    $activity->acivityImages->pluck('image_path')->toArray()
+                );
+                $activity->acivityImages()->delete();
+
+                $uploadedImages = $this->uploadMultipleFiles($request->file('images'), $this->imageFolder);
+
+                foreach ($uploadedImages as $imagePath) {
+                    $activity->acivityImages()->create([
+                        'image_path' => $imagePath,
+                        'image_url' => $this->getFileUrl($imagePath)
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Dokumentasi Kegiatan berhasil diperbarui.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Dokumentasi Kegiatan gagal diperbarui: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Activity $activity)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Activity $activity)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $this->deleteMultipleFiles(
+                $activity->acivityImages->pluck('image_path')->toArray()
+            );
+            $activity->acivityImages()->delete();
+
+            $activity->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Data Dokumentasi Kegiatan berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Data Dokumentasi Kegiatan gagal dihapus: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

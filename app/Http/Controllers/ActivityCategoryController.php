@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ActivityCategoryRequest;
+use App\Models\Activity;
 use App\Models\ActivityCategory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -22,7 +24,7 @@ class ActivityCategoryController extends Controller
     {
         return DataTables::of(ActivityCategory::query())
             ->addIndexColumn()
-            ->addColumn('action', fn ($data) => $data->id)
+            ->addColumn('action', fn($data) => $data->id)
             ->rawColumns(['action'])
             ->make(true);
     }
@@ -77,5 +79,15 @@ class ActivityCategoryController extends Controller
 
             return response()->json(['success' => false, 'message' => 'Data Kategori Kegiatan gagal dihapus: ' . $e->getMessage()], 500);
         }
+    }
+
+
+    public function search(Request $request)
+    {
+        $search = $request->get('search');
+
+        $activityCategories = ActivityCategory::search($search);
+
+        return response()->json($activityCategories);
     }
 }
