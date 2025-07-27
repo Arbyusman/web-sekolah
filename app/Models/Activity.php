@@ -8,4 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Activity extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+    public function activityCategory()
+    {
+        return $this->belongsTo(ActivityCategory::class);
+    }
+
+    public function acivityImages()
+    {
+        return $this->hasMany(ActivityImage::class);
+    }
 }

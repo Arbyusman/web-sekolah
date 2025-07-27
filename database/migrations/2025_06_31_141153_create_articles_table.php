@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('activities', function (Blueprint $table) {
+        Schema::create('articles', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('slug');
             $table->string('title');
             $table->text('description');
-            $table->date('date');
-            $table->foreignId('activity_categories');
             $table->softDeletes();
             $table->timestamps();
         });
