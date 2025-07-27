@@ -16,9 +16,7 @@ class ActivityCategory extends Model
 
     public function scopeSearch($query, $search)
     {
-        $query->where('name', 'like', "%{$search}%")
-            ->limit(10)
-            ->get(['id', 'name'])
-        ;
+        return  $query->where('name', 'like', "%{$search}%")
+            ->get(['id', 'name']);
     }
 }

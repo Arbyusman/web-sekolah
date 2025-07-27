@@ -20,6 +20,15 @@ const KTAddActivityDocumentation = (() => {
             });
     };
 
+    const initSingleDatePicker = () => {
+        $("#kt_add_activity_documentation_daterangepicker").daterangepicker({
+            singleDatePicker: true,
+            showDropdowns: true,
+            minYear: moment().year(),
+            maxYear: parseInt(moment().add(10, 'years').format("YYYY"), 10),
+        });
+    };
+
     const initDropzone = () => {
         myDropzone = new Dropzone("#kt_add_activity_documentation_dropzone_images", {
             url: "/dummy-upload",
@@ -32,8 +41,8 @@ const KTAddActivityDocumentation = (() => {
             uploadMultiple: true,
             parallelUploads: 10,
             previewsContainer: "#kt_add_activity_documentation_dropzone_images_preview",
-            init: function() {
-                this.on("addedfile", function(file) {
+            init: function () {
+                this.on("addedfile", function (file) {
                     const removeButton = file.previewElement.querySelector(".dz-remove");
                     removeButton.addEventListener("click", (e) => {
                         e.preventDefault();
@@ -88,7 +97,9 @@ const KTAddActivityDocumentation = (() => {
             fv.validate().then(function (status) {
                 if (status === 'Valid') {
                     const formData = new FormData();
-                    formData.append('name', addForm.find('[name="name"]').val().trim());
+                    formData.append('title', addForm.find('[name="title"]').val());
+                    formData.append('activity_category_id', addForm.find('[name="activity_category_id"]').val());
+                    formData.append('date', addForm.find('[name="date"]').val());
                     formData.append('description', editor.getData());
 
                     if (myDropzone.files.length > 0) {
@@ -172,6 +183,7 @@ const KTAddActivityDocumentation = (() => {
 
     const init = () => {
         initCKEditor();
+        initSingleDatePicker();
         initDropzone();
         validate();
         submit();

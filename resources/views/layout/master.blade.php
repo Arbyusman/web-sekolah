@@ -39,6 +39,7 @@
     @endforeach
     <!--end::Custom Stylesheets-->
 
+    <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
     @stack('styles')
 
@@ -74,6 +75,7 @@
     <!--end::Javascript-->
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
     <script>
