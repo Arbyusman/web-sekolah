@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityCategoryController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MajorController;
@@ -45,8 +46,14 @@ Route::middleware(['auth', 'verified'])
             ->group(function () {
                 Route::controller(ActivityCategoryController::class)
                     ->group(function () {
+                        Route::get('categories/search', 'search')->name('categories.search');
                         Route::get('categories/table', 'table')->name('categories.table');
                         Route::resource('categories', ActivityCategoryController::class)->except(['create', 'edit'])->parameters(['categories' => 'activityCategory']);
+                    });
+                Route::controller(ActivityController::class)
+                    ->group(function () {
+                        Route::get('documentations/table', 'table')->name('documentations.table');
+                        Route::resource('documentations', ActivityController::class)->except(['create', 'edit']);
                     });
             });
     });

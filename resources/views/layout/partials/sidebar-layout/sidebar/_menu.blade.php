@@ -165,11 +165,12 @@
 
                     <!--begin:Menu item-->
                     <div class="menu-item">
-                        <a class="menu-link" href="/">
+                        <a href="{{ route('activity.documentations.index') }}"
+                        class="menu-link {{ request()->routeIs('activity.documentations.index') ? 'active' : '' }}">
                             <span class="menu-bullet">
                                 <span class="bullet bullet-dot"></span>
                             </span>
-                            <span class="menu-title">Kegiatan</span>
+                            <span class="menu-title">Dokumentasi</span>
                         </a>
                     </div>
                     <!--end:Menu item-->
