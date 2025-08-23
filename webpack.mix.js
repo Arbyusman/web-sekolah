@@ -53,9 +53,14 @@ mix.sass(`${dir}/sass/style.scss`, `public/assets/css/style.bundle.css`, {sassOp
     .scripts(require(`./resources/mix/scripts.js`), `public/assets/js/scripts.bundle.js`);
 
 // Build custom 3rd party plugins
+// (glob.sync(`resources/mix/vendors/**/*.js`) || []).forEach(file => {
+//     mix.scripts(require('./' + file), `public/assets/${file.replace('resources/mix/vendors/', 'plugins/custom/')}`);
+// });
+
 (glob.sync(`resources/mix/vendors/**/*.js`) || []).forEach(file => {
-    mix.scripts(require('./' + file), `public/assets/${file.replace('resources/mix/vendors/', 'plugins/custom/')}`);
+    mix.scripts(file, `public/assets/${file.replace('resources/mix/vendors/', 'plugins/custom/')}`);
 });
+
 (glob.sync(`resources/mix/vendors/**/*.scss`) || []).forEach(file => {
     mix.sass(file, `public/assets/${file.replace('resources/mix/vendors/', 'plugins/custom/').replace('scss', 'css')}`);
 });
