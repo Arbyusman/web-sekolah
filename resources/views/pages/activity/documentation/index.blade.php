@@ -12,10 +12,12 @@
                 </x-button>
 
                 <x-modal size="xl" id="kt_modal_add_activity_documentation" title="Tambah Dokumentasi kegiatan">
-                    <form id="kt_modal_add_activity_documentation_form">
+                    <form id="kt_modal_add_activity_documentation_form" enctype="multipart/form-data">
                         @csrf
-                        <x-input type="text" name="title" id="title" placeholder="Masukkan Judul Kegiatan"
-                            label="Judul Kegiatan" />
+                        <div class="fv-row mb-5">
+                            <x-input type="text" name="title" id="title" placeholder="Masukkan Judul Kegiatan"
+                                label="Judul Kegiatan" />
+                        </div>
 
                         <div class="fv-row mb-5">
                             <x-select2 name="activity_category_id" id="activity_category_id" label="Kategori Kegiatan"
@@ -23,7 +25,7 @@
                                 placeholder="Pilih kategori..." :selected="old('activity_category_id')" />
                         </div>
 
-                        <div class="mb-3">
+                        <div class="fv-row mb-5">
                             <label for="kt_add_activity_documentation_daterangepicker" class="form-label fw-semibold">
                                 Pilih Tanggal Kegiatan
                                 <span class="text-danger">*</span>
@@ -34,7 +36,7 @@
 
 
                         <div class="fv-row mb-5">
-                            <label for="kt_add_activity_documentation_daterangepicker" class="form-label fw-semibold">
+                            <label class="form-label fw-semibold">
                                 Deskripsi Kegiatan
                                 <span class="text-danger">*</span>
                             </label>
@@ -42,7 +44,7 @@
                         </div>
 
                         <div class="fv-row mb-5">
-                            <label for="kt_add_activity_documentation_daterangepicker" class="form-label fw-semibold">
+                            <label class="form-label fw-semibold">
                                 Foto Kegiatan
                                 <span class="text-danger">*</span>
                             </label>
@@ -52,7 +54,7 @@
                                             class="path1"></span><span class="path2"></span></i>
                                     <div class="ms-4">
                                         <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.
-                                        </h3>
+                                            button          </h3>
                                         <span class="fs-7 fw-semibold text-gray-500">Upload up to 25 files</span>
                                     </div>
                                 </div>
@@ -61,8 +63,12 @@
                         </div>
 
                         <div class="text-end mt-4">
-                            <x-button type="button" color="light" dataBsDismiss="modal">Batal</x-button>
-                            <x-button type="submit" color="primary">Simpan</x-button>
+                            <x-button type="reset" class="me-3" color="light"
+                                data-kt-activity-documentation-modal-action="close">Close</x-button>
+                            <x-button type="button" id="submit_add_activity_documentation" color="primary"
+                                data-url="{{ route('activity.documentations.store') }}"
+                                data-kt-activity-documentation-modal-action="submit"
+                                data-form-autofill="off" autocomplete="off">Simpan</x-button>
                         </div>
                     </form>
                 </x-modal>
@@ -78,11 +84,11 @@
                         <th style="width:80%">Nama</th>
                         <th style="width:15%">Aksi</th>
                     </tr>
-                </x-slot:body>
+                </x-slot:head>
 
                 <x-slot:body>
 
-                </x-slot:head>
+                </x-slot:body>
             </x-table>
             <x-modal id="kt_modal_edit_activity_documentation" title="Edit Dokumentasi Kegiatan" size="lg">
                 <x-form action="" id="kt_modal_edit_activity_documentation_form" method="POST"
@@ -90,25 +96,52 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- CKEditor for Title -->
                     <div class="fv-row mb-5">
-                        <label class="form-label">Judul Kegiatan</label>
-                        <textarea name="title" id="kt_docs_ckeditor_classic" class="form-control"></textarea>
+                        <x-input type="text" name="title" id="edit_title" placeholder="Masukkan Judul Kegiatan"
+                            label="Judul Kegiatan" />
                     </div>
 
-                    <!-- Dropzone for Multiple Images -->
                     <div class="fv-row mb-5">
-                        <label class="form-label">Upload Gambar</label>
-                        <div class="dropzone" id="kt_dropzonejs_example_1">
+                        <x-select2 name="activity_category_id" id="edit_activity_category_id" label="Kategori Kegiatan"
+                            searchable="true" route="{{ route('activity.categories.search') }}"
+                            placeholder="Pilih kategori..." :selected="old('activity_category_id')" />
+                    </div>
+
+                    <div class="fv-row mb-5">
+                        <label for="kt_edit_activity_documentation_daterangepicker" class="form-label fw-semibold">
+                            Pilih Tanggal Kegiatan
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input class="form-control form-control-solid" placeholder="Pick date rage"
+                            id="kt_edit_activity_documentation_daterangepicker" />
+                    </div>
+
+
+                    <div class="fv-row mb-5">
+                        <label class="form-label fw-semibold">
+                            Deskripsi Kegiatan
+                            <span class="text-danger">*</span>
+                        </label>
+                        <textarea name="description" id="edit_description" class="form-control"></textarea>
+                    </div>
+
+                    <div class="fv-row mb-5">
+                        <label class="form-label fw-semibold">
+                            Foto Kegiatan
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="dropzone" id="kt_edit_activity_documentation_dropzone_images">
                             <div class="dz-message needsclick">
-                                <i class="bi bi-file-earmark-arrow-up text-primary fs-3x"></i>
+                                <i class="ki-duotone ki-file-up fs-3x text-primary"><span class="path1"></span><span
+                                        class="path2"></span></i>
                                 <div class="ms-4">
-                                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.</h3>
-                                    <span class="fs-7 fw-semibold text-gray-400">Upload up to 10 files</span>
+                                    <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.
+                                    </h3>
+                                    <span class="fs-7 fw-semibold text-gray-500">Upload up to 25 files</span>
                                 </div>
                             </div>
+                            <div id="kt_edit_activity_documentation_dropzone_images_preview" class="mt-3"></div>
                         </div>
-                        <div id="kt_dropzonejs_example_1_preview" class="mt-3"></div>
                     </div>
 
                     <div class="text-end mt-4">

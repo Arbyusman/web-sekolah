@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('activity_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('activities');
+            $table->foreignId('activity_id')->constrained('activities');
             $table->string('file');
+            $table->timestamps();
         });
     }
 

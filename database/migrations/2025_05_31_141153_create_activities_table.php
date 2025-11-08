@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->date('date');
-            $table->foreignId('activity_categories');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->foreignId('activity_category_id')->constrained('activity_categories');
             $table->softDeletes();
             $table->timestamps();
         });

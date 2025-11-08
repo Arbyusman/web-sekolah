@@ -25,9 +25,10 @@ class ActivityRequest extends FormRequest
             'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
             'activity_category_id' => 'sometimes|required|exists:activity_categories,id',
-            'date' => 'sometimes|required|date',
+            'start_date' => 'sometimes|required|date',
+            'end_date' => 'sometimes|required|date',
             'images' => 'sometimes|required|array',
-            'images.*' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'sometimes|required|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
 }

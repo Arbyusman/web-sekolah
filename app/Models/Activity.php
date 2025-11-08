@@ -18,7 +18,7 @@ class Activity extends Model
         return $this->belongsTo(ActivityCategory::class);
     }
 
-    public function acivityImages()
+    public function activityImages()
     {
         return $this->hasMany(ActivityImage::class);
     }

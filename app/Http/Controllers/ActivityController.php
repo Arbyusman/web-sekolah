@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ActivityRequest;
 use App\Models\Activity;
 use App\Models\ActivityImage;
-use App\Traits\site;
 use App\Traits\SiteTrait;
-use App\Traits\UploadFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -46,9 +44,9 @@ class ActivityController extends Controller
                 $uploadedImages = $this->uploadMultipleFiles($request->file('images'), $this->imageFolder);
 
                 foreach ($uploadedImages as $imagePath) {
-                    $activity->acivityImages()->create([
-                        'image_path' => $imagePath,
-                        'image_url' => $this->getFileUrl($imagePath)
+                    $activity->activityImages()->create([
+                        'activity_id' => $activity->id,
+                        'file' => $imagePath,
                     ]);
                 }
             }
@@ -70,7 +68,7 @@ class ActivityController extends Controller
 
     public function show(Activity $activity)
     {
-        return response()->json($activity->load('acivityImages'));
+        return response()->json($activity->load('activityImages'));
     }
 
     public function update(ActivityRequest $request, Activity $activity)
@@ -83,14 +81,15 @@ class ActivityController extends Controller
 
             if ($request->hasFile('images')) {
                 $this->deleteMultipleFiles(
-                    $activity->acivityImages->pluck('image_path')->toArray()
+                    $activity->activityImages->pluck('image_path')->toArray()
                 );
-                $activity->acivityImages()->delete();
+                $activity->activityImages()->delete();
 
                 $uploadedImages = $this->uploadMultipleFiles($request->file('images'), $this->imageFolder);
 
                 foreach ($uploadedImages as $imagePath) {
-                    $activity->acivityImages()->create([
+                    $activity->activityImages()->create([
+                        'activity_id' => $activity->id,
                         'image_path' => $imagePath,
                         'image_url' => $this->getFileUrl($imagePath)
                     ]);
@@ -118,9 +117,9 @@ class ActivityController extends Controller
             DB::beginTransaction();
 
             $this->deleteMultipleFiles(
-                $activity->acivityImages->pluck('image_path')->toArray()
+                $activity->activityImages->pluck('image_path')->toArray()
             );
-            $activity->acivityImages()->delete();
+            $activity->activityImages()->delete();
 
             $activity->delete();
 

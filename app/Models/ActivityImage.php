@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ActivityImage extends Model
 {
     use HasFactory;
+
+    protected $guarded = ["id"];
+
+    public function activityImages()
+    {
+        return $this->belongsTo(Activity::class);
+    }
 }

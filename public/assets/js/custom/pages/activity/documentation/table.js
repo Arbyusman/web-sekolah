@@ -8,12 +8,12 @@ const KTActivityDocumentation = (() => {
     const getAjaxUrl = () => document.getElementById("table-url")?.value || '';
 
     const renderActionButtons = (id) => `
-        <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1 edit-activity-category-btn" data-id="${id}">
+        <button class="btn btn-icon btn-bg-light btn-active-color-success btn-sm me-1 edit-activity-documentation-btn" data-id="${id}">
             <i class="ki-duotone ki-pencil fs-2">
                 <span class="path1"></span><span class="path2"></span>
             </i>
         </button>
-        <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm delete-activity-category-btn" data-id="${id}">
+        <button class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm delete-activity-documentation-btn" data-id="${id}">
             <i class="ki-duotone ki-trash fs-2">
                 <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span>
             </i>
@@ -36,7 +36,7 @@ const KTActivityDocumentation = (() => {
             info: false,
             columns: [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-                { data: 'name', name: 'name' },
+                { data: 'title', name: 'title' },
                 { data: 'action', name: 'action', orderable: false, searchable: false },
             ],
             columnDefs: [
@@ -55,9 +55,9 @@ const KTActivityDocumentation = (() => {
         window.datatable = datatable;
     };
 
-    const deleteActivityCategory = () => {
+    const deleteActivityDocumentation = () => {
         const button = deleteForm.find('button[type="submit"]');
-        $(document).on('click', '.delete-activity-category-btn', function () {
+        $(document).on('click', '.delete-activity-documentation-btn', function () {
             const id = $(this).data('id');
             deleteForm.attr('action', `/activity/documentations/${id}`);
             deleteIdInput.val(id);
@@ -68,6 +68,9 @@ const KTActivityDocumentation = (() => {
             e.preventDefault();
             const id = deleteIdInput.val();
 
+            button.attr('data-kt-indicator', 'on');
+            button.prop('disabled', true);
+
             $.ajax({
                 url: `/activity/documentations/${id}`,
                 type: 'DELETE',
@@ -76,13 +79,35 @@ const KTActivityDocumentation = (() => {
                 },
                 success: function (response) {
                     button.removeAttr('data-kt-indicator');
+                    button.prop('disabled', false);
                     deleteModal.modal('hide');
-                    Swal.fire('Deleted!', response.message || 'Kategori kegiatan berhasil dihapus.', 'success');
+                    Swal.fire({
+                        text: response.message || 'Dokumentasi kegiatan berhasil dihapus.',
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
                     window.datatable.ajax.reload();
                 },
-                error: function () {
+                error: function (xhr) {
                     button.removeAttr('data-kt-indicator');
-                    Swal.fire('Error!', 'Terjadi kesalahan saat menghapus.', 'error');
+                    button.prop('disabled', false);
+                    let errorMessage = 'Terjadi kesalahan saat menghapus.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    Swal.fire({
+                        text: errorMessage,
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    });
                 }
             });
         });
@@ -92,12 +117,12 @@ const KTActivityDocumentation = (() => {
         table = getTableElement();
         if (!table) return;
 
-        deleteModal = $('#kt_modal_delete_activity_category');
-        deleteForm = deleteModal.find('#kt_modal_delete_activity_category_form');
+        deleteModal = $('#kt_modal_delete_activity_documentation');
+        deleteForm = deleteModal.find('#kt_modal_delete_activity_documentation_form');
         deleteIdInput = deleteForm.find('#id');
 
         initDataTable();
-        deleteActivityCategory();
+        deleteActivityDocumentation();
     };
 
     return { init };
