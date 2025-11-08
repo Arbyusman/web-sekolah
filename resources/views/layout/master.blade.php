@@ -85,6 +85,7 @@
     </script>
 
     @stack('scripts')
+    <script src="{{ asset('assets/js/custom/script.js') }}"></script>
 
 
 </body>

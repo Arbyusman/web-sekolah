@@ -133,7 +133,7 @@ let KTAddActivityDocumentation = (function () {
             }
         });
 
-        
+
         const closeButton = element.querySelector('[data-kt-activity-documentation-modal-action="close"]');
         if (closeButton) {
             closeButton.addEventListener("click", (e) => {
@@ -260,9 +260,7 @@ let KTAddActivityDocumentation = (function () {
                                     ).then(() => {
                                         if (response.status === "success") {
                                             resetForm();
-                                            if (typeof window.datatable !== 'undefined') {
-                                                window.datatable.ajax.reload();
-                                            }
+                                            window.datatable.ajax.reload();
                                         }
                                     });
                                 })
